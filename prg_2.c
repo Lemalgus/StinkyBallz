@@ -213,26 +213,43 @@ void iw_type(int instruction, int opcode) {
 
 
 int main() {
-    int instruction = 0b11111000000001000000001000100001;
+	
+	FILE* fptr = fopen("test.legv8asm", "rb");
+
+    if (fptr == NULL)
+    {
+        printf("ERR: File Not Found");
+        exit(-1);
+    }
+	
+	//index to find end of file
+	int index = 0;
+	int instruction;
 	char buffer[40];
 	
-	bool rType = false;
-	bool iType = false;
-	bool dType = true;
-	bool bType = false;
-	bool cbType = false;
-	bool iwType = false;
-
+	//seek to end of file, compare to startinng pointer to find size, seek back to start
+    fseek(fptr, 0, SEEK_END);
+    int size = ftell(fptr);
+    fseek(fptr, 0, SEEK_SET);
 	
+	
+	
+	
+	
+	
+	//START OF BIG DADDY WHILE LOOP
+	while(index < size){
+	
+	index += (fread(&instruction, sizeof(instruction), 1, fptr) * sizeof(instruction));
 	
 	//extract opcode
-	int opcode = (bitstring >> 21) & 0x7ff;
+	int opcode = (instruction >> 21) & 0x7ff;
 	
-	printf("Binary representation of %d: ", opcode);
+	//print binary representation for fun
+	printf("Binary representation of %d: \n", opcode);
     print_binary(opcode);
 	
-	
-	//B (is only 6 bits, so we need to include the not B.COND because B.COND has similar start as B
+	//B
 	if(((opcode >> 5) & 0x05) == (opcode >> 5)){
 		printf("B ");
 		b_type(instruction, opcode);
@@ -392,11 +409,11 @@ int main() {
 		
 	}
 	else{
-		printf("invalid command");
+		printf("invalid command\n");
 		continue;
 	}
 	
 	
 	global_i++;
-
+	}
 }
