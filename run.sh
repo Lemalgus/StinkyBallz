@@ -1,1 +1,0 @@
-./prg_2_testing $1
