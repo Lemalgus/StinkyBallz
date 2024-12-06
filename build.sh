@@ -1,0 +1,1 @@
+gcc prg_2_testing.c -o prg_2_testing
