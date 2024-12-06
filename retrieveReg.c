@@ -31,9 +31,9 @@ if (rType) {
     int Rm = instruction & 0x1F;
 
 
-    char RdString[40] = "X";
-    sprintf(buffer, "%d", Rd);
-    strcat(RdString, buffer);
+    char RdString[40] = "X"; //add a case specifically for BR which only uses the Rn field such as: BR X10
+    sprintf(buffer, "%d", Rd); //also need a case for LSL and RSL where it uses Shamt in place of Rm
+    strcat(RdString, buffer); //need a case for PRNT, PRNL, DUMP, HALT
 
     char RnString[40] = ", X";
     sprintf(buffer, "%d", Rn);
@@ -47,10 +47,17 @@ if (rType) {
     sprintf(buffer, "%d", shamt);
     strcat(ShamtString, buffer);
 
-    strcat(RdString, RnString);
-    strcat(RdString, RmString);
+    
 
-    printf("%s\n", RmString);
+    if (opcode == 0b11010110000) { //for BR
+        printf(" X%s", RnString);
+    } else if (opcode == 0b11010011011 || opcode == 0b11010011010) {
+        printf("%s %s %s", RdString, RnString, ShamtString);
+    } else {
+        strcat(RdString, RnString);
+        strcat(RdString, RmString);
+        printf("%s\n", RdString);
+    }
 }
 
 else if (iType) {
