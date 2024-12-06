@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include <endian.h>
+#include <endian.h>
 	
 void print_binary(int num) {
     int i;
@@ -13,7 +13,7 @@ void print_binary(int num) {
 
 int main() {
 
-	FILE* fptr = fopen("u:\\321 Hw2\\test.bin", "rb");
+	FILE* fptr = fopen("test.legv8asm", "rb");
 
     if (fptr == NULL) 
     {
@@ -34,7 +34,7 @@ int main() {
         index += (fread(&bitstring, sizeof(bitstring), 1, fptr) * sizeof(bitstring));
         //printf("%d\n", bitstring);]
 
-		//bitstring = be32toh(bitstring);
+		bitstring = be32toh(bitstring);
     
 	
 	//extract opcode
