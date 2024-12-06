@@ -6,6 +6,8 @@
 #include <stdio.h>
 
 int global_i = 1;
+
+
 	
 void print_binary(int num) {
     int i;
@@ -82,11 +84,11 @@ void i_type(int instruction, int opcode) {
     sprintf(buffer, "%d", Rd);
     strcat(RdString, buffer);
 
-    char RnString[40] = "X";
+    char RnString[40] = ", X";
     sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
-    char ALUString[40] = "#";
+    char ALUString[40] = ", #";
     sprintf(buffer, "%d", ALUImm);
     strcat(ALUString, buffer);
 
@@ -134,6 +136,11 @@ void d_type(int instruction, int opcode) {
 void b_type(int instruction, int opcode) {
 	char buffer[40];
     int BRAdd = instruction & 0x3FFFFFF;
+	
+	if ((BRAdd >> 26) & 1) {
+		BRAdd = ~BRAdd + 1;
+	}
+	
     BRAdd += global_i;
 
 
@@ -152,6 +159,11 @@ void cb_type(int instruction, int opcode) {
     int Rt = instruction & 0x1F; //value that determines ge, lt, etc
     instruction = instruction >> 5;
     int COND_BR_ADD = instruction & 0x8FFFF;
+	
+	if ((COND_BR_ADD >> 18) & 1) {
+		COND_BR_ADD = ~COND_BR_ADD + 1;
+	}
+	
 		//handle if negative or psitive 
 		//(twos to binary) -> (binary to decimal)
 		
@@ -249,7 +261,7 @@ void iw_type(int instruction, int opcode) {
 
 int main() {
 	
-	FILE* fptr = fopen("test.legv8asm", "rb");
+	FILE* fptr = fopen("c_testing.legv8asm", "rb");
 
     if (fptr == NULL)
     {
