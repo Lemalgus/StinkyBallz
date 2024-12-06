@@ -1,4 +1,3 @@
-
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
@@ -29,23 +28,25 @@ if (rType) {
 
 
     char RdString[40] = "X";
-    itoa(Rd, buffer, 10);
+    sprintf(buffer, "%d", Rd);
     strcat(RdString, buffer);
 
     char RnString[40] = "X";
-    itoa(Rn, buffer, 10);
+    sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
     char RmString[40] = "X";
-    itoa(Rm, buffer, 10);
+    sprintf(buffer, "%d", Rm);
     strcat(RmString, buffer);
 
     char ShamtString[40] = "X";
-    itoa(shamt, buffer, 10);
+    sprintf(buffer, "%d", shamt);
     strcat(ShamtString, buffer);
 
     strcat(RmString, RnString);
     strcat(RmString, RdString);
+
+    printf("%s\n", RmString);
 }
 
 else if (iType) {
@@ -57,19 +58,21 @@ else if (iType) {
 
 
     char RdString[40] = "X";
-    itoa(Rd, buffer, 10);
+    sprintf(buffer, "%d", Rd);
     strcat(RdString, buffer);
 
     char RnString[40] = "X";
-    itoa(Rn, buffer, 10);
+    sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
     char ALUString[40] = "#";
-    itoa(ALUImm, buffer, 10);
+    sprintf(buffer, "%d", ALUImm);
     strcat(ALUString, buffer);
 
     strcat(RdString, RnString);
     strcat(RdString, ALUString);
+
+    printf("%s\n", RdString);
 }
 
 else if (dType) {
@@ -83,24 +86,26 @@ else if (dType) {
 
 
     char RtString[40] = "X";
-    itoa(Rt, buffer, 10);
+    sprintf(buffer, "%d", Rt);
     strcat(RtString, buffer);
 
     char RnString[40] = "[X";
-    itoa(Rn, buffer, 10);
+    sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
     char opString[40] = "X";
-    itoa(op, buffer, 10);
+    sprintf(buffer, "%d", op);
     strcat(opString, buffer);
 
     char DTString[40] = "#";
-    itoa(DTAdd, buffer, 10);
+    sprintf(buffer, "%d", DTAdd);
     strcat(DTString, buffer);
 
     strcat(RtString, RnString);
     strcat(RtString, DTString);
     strcat(RtString, "]");
+
+    printf("%s\n", RtString);
 
 }
 
@@ -109,8 +114,10 @@ else if (bType) {
 
 
     char BRString[40] = "X";
-    itoa(BRAdd, buffer, 10);
+    sprintf(buffer, "%d", BRAdd);
     strcat(BRString, buffer);
+
+    printf("%s\n", BRString);
 }
 
 else if (cbType) {
@@ -120,14 +127,16 @@ else if (cbType) {
 
 
     char RtString[40] = "X";
-    itoa(Rt, buffer, 10);
+    sprintf(buffer, "%d", Rt);
     strcat(RtString, buffer);
 
     char CONDString[40] = "";
-    itoa(COND_BR_Add, buffer, 10);
+    sprintf(buffer, "%d", COND_BR_ADD);
     strcat(CONDString, buffer);
 
     strcat(RtString, ", ");
+
+    printf("%s\n", RtString);
 }
 
 else if (iwType) {
@@ -137,15 +146,17 @@ else if (iwType) {
 
 
     char RdString[40] = "X";
-    itoa(Rd, buffer, 10);
+    sprintf(buffer, "%d", Rd);
     strcat(RdString, buffer);
 
     char MOVString[40] = "#0x";
-    itoa(Mov_Imm, buffer, 10);
+    sprintf(buffer, "%d", Mov_Imm);
     strcat(MOVString, buffer);
 
     strcat(RdString, ", ");
     strcat(RdString, MOVString);
+
+    printf("%s\n", RdString);
 }
 
 }
