@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <endian.h>
 	
 void print_binary(int num) {
     int i;
@@ -15,12 +14,13 @@ int main() {
 
 	FILE* fptr = fopen("test.legv8asm", "rb");
 
-    if (fptr == NULL) 
+    if (fptr == NULL)
     {
-        printf("ERROR: File Not Found");
+        printf("ERR: File Not Found");
         exit(-1);
     }
 
+	//index to find end of file
 	int index = 0;
 	int bitstring; 
 
@@ -29,28 +29,19 @@ int main() {
     int size = ftell(fptr);
     fseek(fptr, 0, SEEK_SET);
 
+
     while(index < size)
     {
         index += (fread(&bitstring, sizeof(bitstring), 1, fptr) * sizeof(bitstring));
-        //printf("%d\n", bitstring);]
-
-		bitstring = be32toh(bitstring);
     
-	
 	//extract opcode
 	int opcode = (bitstring >> 21) & 0x7ff;
 	
 	printf("Binary representation of %d: ", opcode);
     print_binary(opcode);
 	
-	
-	
-	
 	//go in order of opcode
-	
-	
-	
-	
+
 	//B (is only 6 bits, so we need to include the not B.COND because B.COND has similar start as B
 	if(((opcode >> 5) & 0x05) == (opcode >> 5)){
 		printf("\nB COMMAND");
