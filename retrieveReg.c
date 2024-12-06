@@ -1,8 +1,11 @@
 if (opcode is R type) {
     int Rd = instruction & 0x1F
-    int Rn = instruction >> 5 & 0x1F
-    int shamt = instruction >> 5 & 0x3F
-    int Rm = instruction >> 6 & 0x1F
+    instruction >> 5
+    int Rn = instruction & 0x1F
+    instruction >> 5
+    int shamt = instruction & 0x3F
+    instruction >> 6
+    int Rm = instruction & 0x1F
 
 
     char RdString[40] = "X";
@@ -31,8 +34,10 @@ if (opcode is R type) {
 
 else if (opcode is I type) {
     int Rd = instruction & 0x1F
-    int Rn = instruction >> 5 & 0x1F
-    int ALUImm = instruction >> 5 & 0xFFF //come back, need to check that can work with more than 8 bits
+    instruction >> 5
+    int Rn = instruction & 0x1F
+    instruction >> 5
+    int ALUImm = instruction & 0xFFF //come back, need to check that can work with more than 8 bits
 
 
     char RdString[40] = "X";
@@ -56,9 +61,12 @@ else if (opcode is I type) {
 
 else if (opcode is D type) {
     int Rt = instruction & 0x1F
-    int Rn = instruction >> 5 & 0x1F
-    int op = instruction >> 5 & 0x3
-    int DTAdd = instruction >> 2 & 0x1FF
+    instruction >> 5
+    int Rn = instruction & 0x1F
+    instruction >> 5
+    int op = instruction & 0x3
+    instruction >> 2
+    int DTAdd = instruction & 0x1FF
 
 
     char RtString[40] = "X";
@@ -99,7 +107,8 @@ else if (opcode is B type) {
 
 else if (opcode is CB type) {
     int Rt = instruction & 0x1F
-    int COND_BR_Add = instuction >> 5 & 0x8FFFF
+    instruction >> 5
+    int COND_BR_Add = instruction & 0x8FFFF
 
 
     char RtString[40] = "X";
@@ -117,7 +126,8 @@ else if (opcode is CB type) {
 
 else if (opcode is IW type) {
     int Rd = instruction & 0x1F
-    int Mov_Imm = instuction >> 5 & 0xFFFF
+    instruction >> 5
+    int Mov_Imm = instruction & 0xFFFF
 
 
     char RdString[40] = "X";
