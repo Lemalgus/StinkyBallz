@@ -6,8 +6,6 @@
 #include <stdio.h>
 
 int global_i = 1;
-
-
 	
 void print_binary(int num) {
     int i;
@@ -33,7 +31,7 @@ void r_type(int instruction, int opcode) {
 
     char RdString[40]; //add a case specifically for BR which only uses the Rn field such as: BR X10
     RdString[0] = '\0';
-    RdString[1] = 'X';
+    RdString[0] = 'X';
     sprintf(buffer, "%d", Rd); //also need a case for LSL and RSL where it uses Shamt in place of Rm
     strcat(RdString, buffer); //need a case for PRNT, PRNL, DUMP, HALT
 
@@ -80,15 +78,21 @@ void i_type(int instruction, int opcode) {
     int ALUImm = instruction & 0xFFF; //come back, need to check that can work with more than 8 bits
 
 
-    char RdString[40] = "X";
+    char RdString[40];
+    RdString[0] = '\0';
+    RdString[0] = 'X';
     sprintf(buffer, "%d", Rd);
     strcat(RdString, buffer);
 
-    char RnString[40] = ", X";
+    char RnString[40];
+    RnString[0] = '\0';
+    RnString[0] = 'X';
     sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
-    char ALUString[40] = ", #";
+    char ALUString[40];
+    ALUString[0] = '\0';
+    ALUString[0] = '#';
     sprintf(buffer, "%d", ALUImm);
     strcat(ALUString, buffer);
 
@@ -100,6 +104,7 @@ void i_type(int instruction, int opcode) {
 
 void d_type(int instruction, int opcode) {
 	char buffer[40];
+    buffer[0] = '\0';
     int Rt = instruction & 0x1F;
     instruction = instruction >> 5;
     int Rn = instruction & 0x1F;
@@ -109,19 +114,33 @@ void d_type(int instruction, int opcode) {
     int DTAdd = instruction & 0x1FF;
 
 
-    char RtString[40] = " X";
+    char RtString[40];
+    RtString[0] = '\0';
+    RtString[0] = ' ';
+    RtString[1] = 'X';
     sprintf(buffer, "%d", Rt);
     strcat(RtString, buffer);
 
-    char RnString[40] = ", [X";
+    char RnString[40];
+    RnString[0] = '\0';
+    RnString[0] = ',';
+    RnString[1] = ' ';
+    RnString[2] = '[';
+    RnString[3] = 'X';
     sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
-    char opString[40] = "X";
+    char opString[40];
+    opString[0] = '\0';
+    opString[0] = 'X';
     sprintf(buffer, "%d", op);
     strcat(opString, buffer);
 
-    char DTString[40] = " ,#";
+    char DTString[40];
+    DTString[0] = '\0';
+    DTString[0] = ' ';
+    DTString[1] = ',';
+    DTString[2] = '#';
     sprintf(buffer, "%d", DTAdd);
     strcat(DTString, buffer);
 
@@ -135,16 +154,20 @@ void d_type(int instruction, int opcode) {
 
 void b_type(int instruction, int opcode) {
 	char buffer[40];
+    buffer[0] = '\0';
     int BRAdd = instruction & 0x3FFFFFF;
-	
-	if ((BRAdd >> 26) & 1) {
-		BRAdd = ~BRAdd + 1;
+
+    if ((BRAdd >> 26) & 1) {
+		BRAdd = (~BRAdd) + 1;
 	}
-	
+
+
     BRAdd += global_i;
 
 
-    char BRString[40] = "X";
+    char BRString[40];
+    BRString[0] = '\0';
+    BRString[0] = 'X';
     sprintf(buffer, "%d", BRAdd);
     strcat(BRString, buffer);
 
@@ -159,13 +182,12 @@ void cb_type(int instruction, int opcode) {
     int Rt = instruction & 0x1F; //value that determines ge, lt, etc
     instruction = instruction >> 5;
     int COND_BR_ADD = instruction & 0x8FFFF;
-	
-	if ((COND_BR_ADD >> 18) & 1) {
-		COND_BR_ADD = ~COND_BR_ADD + 1;
-	}
-	
 		//handle if negative or psitive 
 		//(twos to binary) -> (binary to decimal)
+
+        if ((COND_BR_ADD >> 18) & 1) {
+		COND_BR_ADD = (~COND_BR_ADD) + 1;
+	}
 		
     COND_BR_ADD += global_i;
 
@@ -236,6 +258,7 @@ void cb_type(int instruction, int opcode) {
 
 void iw_type(int instruction, int opcode) {
 	char buffer[40];
+    buffer[0] = '\0';
 
     int Rd = instruction & 0x1F;
     instruction = instruction >> 5;
@@ -244,11 +267,18 @@ void iw_type(int instruction, int opcode) {
     // int shift = instruction 
 
 
-    char RdString[40] = "X";
+    char RdString[40];
+    RdString[0] = '\0';
+    RdString[0] = 'X';
+    RdString[1] = '\0';
     sprintf(buffer, "%d", Rd);
     strcat(RdString, buffer);
 
-    char MOVString[40] = "#0x";
+    char MOVString[40];
+    MOVString[0] = '\0';
+    MOVString[0] = '#';
+    MOVString[1] = '0';
+    MOVString[2] = 'x';
     sprintf(buffer, "%d", Mov_Imm);
     strcat(MOVString, buffer);
 
@@ -261,7 +291,7 @@ void iw_type(int instruction, int opcode) {
 
 int main() {
 	
-	FILE* fptr = fopen("c_testing.legv8asm", "rb");
+	FILE* fptr = fopen("test.legv8asm", "rb");
 
     if (fptr == NULL)
     {
