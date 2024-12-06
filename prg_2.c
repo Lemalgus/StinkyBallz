@@ -19,6 +19,7 @@ void print_binary(int num) {
 
 void r_type(int instruction, int opcode) {
 	char buffer[40];
+    buffer[0] = '\0';
     int Rd = instruction & 0x1F;
     instruction = instruction >> 5;
     int Rn = instruction & 0x1F;
@@ -28,23 +29,33 @@ void r_type(int instruction, int opcode) {
     int Rm = instruction & 0x1F;
 
 
-    char RdString[40] = "X"; //add a case specifically for BR which only uses the Rn field such as: BR X10
+    char RdString[40]; //add a case specifically for BR which only uses the Rn field such as: BR X10
+    RdString[0] = '\0';
+    RdString[1] = 'X';
     sprintf(buffer, "%d", Rd); //also need a case for LSL and RSL where it uses Shamt in place of Rm
     strcat(RdString, buffer); //need a case for PRNT, PRNL, DUMP, HALT
 
-    char RnString[40] = ", X";
+    char RnString[40];
+    RnString[0] = '\0';
+    RnString[0] = ',';
+    RnString[1] = ' ';
+    RnString[2] = 'X';
     sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
-    char RmString[40] = ", X";
+    char RmString[40];
+    RmString[0] = '\0';
+    RmString[0] = ',';
+    RmString[1] = ' ';
+    RmString[2] = 'X';
     sprintf(buffer, "%d", Rm);
     strcat(RmString, buffer);
 
-    char ShamtString[40] = "X";
+    char ShamtString[40];
+    ShamtString[0] = '\0';
+    ShamtString[0] = 'X';
     sprintf(buffer, "%d", shamt);
     strcat(ShamtString, buffer);
-
-    
 
     if (opcode == 0b11010110000) { //for BR
         printf(" X%s", RnString);
@@ -59,6 +70,7 @@ void r_type(int instruction, int opcode) {
 
 void i_type(int instruction, int opcode) {
 	char buffer[40];
+    buffer[0] = '\0';
     int Rd = instruction & 0x1F;
     instruction = instruction >> 5;
     int Rn = instruction & 0x1F;
@@ -134,6 +146,9 @@ void b_type(int instruction, int opcode) {
 
 void cb_type(int instruction, int opcode) {
 	char buffer[40];
+    buffer[0] = '\0';
+    char ext[3];
+    ext[0] = '\0';
     int Rt = instruction & 0x1F; //value that determines ge, lt, etc
     instruction = instruction >> 5;
     int COND_BR_ADD = instruction & 0x8FFFF;
@@ -141,44 +156,63 @@ void cb_type(int instruction, int opcode) {
 		//(twos to binary) -> (binary to decimal)
 		
     COND_BR_ADD += global_i;
-    char ext[5];
 
     if (Rt == 0) {
-        ext[5] = "EQ";
+        ext[0] = 'E';
+        ext[1] = 'Q';
     } else if (Rt == 1) {
-        ext[5] = "NE";
+        ext[0] = 'N';
+        ext[1] = 'E';
     } else if (Rt == 2) {
-        ext[5] = "HS";
-    } else if (Rt == 3) {
-        ext[5] = "LO";
+        ext[0] = 'H';
+        ext[1] = 'S';
+    } else if(Rt == 3) {
+        ext[0] = 'L';
+        ext[1] = 'O';
     } else if (Rt == 4) {
-        ext[5] = "MI";
+        ext[0] = 'M';
+        ext[1] = 'I';
     } else if (Rt == 5) {
-        ext[5] = "PL";
+        ext[0] = 'P';
+        ext[1] = 'L';
     } else if (Rt == 6) {
-        ext[5] = "VS";
+        ext[0] = 'V';
+        ext[1] = 'S';
     } else if (Rt == 7) {
-        ext[5] = "VC";
+        ext[0] = 'V';
+        ext[1] = 'C';
     } else if (Rt == 8) {
-        ext[5] = "HI";
+        ext[0] = 'H';
+        ext[1] = 'I';
     } else if (Rt == 9) {
-        ext[5] = "LS";
+        ext[0] = 'L';
+        ext[1] = 'S';
     } else if (Rt == 10) {
-        ext[5] = "GE";
+        ext[0] = 'G';
+        ext[1] = 'E';
     } else if (Rt == 11) {
-        ext[5] = "LT";
+        ext[0] = 'L';
+        ext[1] = 'T';
     } else if (Rt == 12) {
-        ext[5] = "GT";
+        ext[0] = 'G';
+        ext[1] = 'T';
     } else if (Rt == 13) {
-        ext[5] = "LE";
+        ext[0] = 'L';
+        ext[1] = 'E';
     }
 
 
     char RtString[40];
+    RtString[0] = '\0';
+    RtString[0] = 'X';
+    RtString[1] = '\0';
+    sprintf(buffer, "%d", Rt);
+    strcat(RtString, buffer);
+
     // sprintf(buffer, "%d", Rt);
     strcat(RtString, ext);
-
     char CONDString[40];
+    CONDString[0] = '\0';
     sprintf(buffer, "%d", COND_BR_ADD);
     strcat(CONDString, buffer);
 
@@ -190,6 +224,7 @@ void cb_type(int instruction, int opcode) {
 
 void iw_type(int instruction, int opcode) {
 	char buffer[40];
+
     int Rd = instruction & 0x1F;
     instruction = instruction >> 5;
     int Mov_Imm = instruction & 0xFFFF;
