@@ -32,6 +32,7 @@ void r_type(int instruction, int opcode) {
     char RdString[40]; //add a case specifically for BR which only uses the Rn field such as: BR X10
     RdString[0] = '\0';
     RdString[0] = 'X';
+    RdString[1] = '\0';
     sprintf(buffer, "%d", Rd); //also need a case for LSL and RSL where it uses Shamt in place of Rm
     strcat(RdString, buffer); //need a case for PRNT, PRNL, DUMP, HALT
 
@@ -40,6 +41,7 @@ void r_type(int instruction, int opcode) {
     RnString[0] = ',';
     RnString[1] = ' ';
     RnString[2] = 'X';
+    RnString[3] = '\0';
     sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
@@ -53,7 +55,8 @@ void r_type(int instruction, int opcode) {
 
     char ShamtString[40];
     ShamtString[0] = '\0';
-    ShamtString[0] = 'X';
+    ShamtString[0] = ',';
+    ShamtString[1] = '#';
     sprintf(buffer, "%d", shamt);
     strcat(ShamtString, buffer);
 
@@ -81,18 +84,23 @@ void i_type(int instruction, int opcode) {
     char RdString[40];
     RdString[0] = '\0';
     RdString[0] = 'X';
+    RdString[1] = '\0';
     sprintf(buffer, "%d", Rd);
     strcat(RdString, buffer);
 
     char RnString[40];
     RnString[0] = '\0';
-    RnString[0] = 'X';
+    RnString[0] = ',';
+    RnString[1] = ' ';
+    RnString[2] = 'X';
     sprintf(buffer, "%d", Rn);
     strcat(RnString, buffer);
 
     char ALUString[40];
     ALUString[0] = '\0';
-    ALUString[0] = '#';
+    ALUString[0] = ',';
+    ALUString[1] = ' ';
+    ALUString[2] = '#';
     sprintf(buffer, "%d", ALUImm);
     strcat(ALUString, buffer);
 
@@ -116,8 +124,8 @@ void d_type(int instruction, int opcode) {
 
     char RtString[40];
     RtString[0] = '\0';
-    RtString[0] = ' ';
-    RtString[1] = 'X';
+    RtString[0] = 'X';
+    RtString[1] = '\0';
     sprintf(buffer, "%d", Rt);
     strcat(RtString, buffer);
 
@@ -138,8 +146,8 @@ void d_type(int instruction, int opcode) {
 
     char DTString[40];
     DTString[0] = '\0';
-    DTString[0] = ' ';
-    DTString[1] = ',';
+    DTString[0] = ',';
+    DTString[1] = ' ';
     DTString[2] = '#';
     sprintf(buffer, "%d", DTAdd);
     strcat(DTString, buffer);
@@ -157,7 +165,7 @@ void b_type(int instruction, int opcode) {
     buffer[0] = '\0';
     int BRAdd = instruction & 0x3FFFFFF;
 
-    if ((BRAdd >> 26) & 1) {
+    if ((BRAdd >> 25) & 1) {
 		BRAdd = (~BRAdd) + 1;
 	}
 
@@ -167,11 +175,10 @@ void b_type(int instruction, int opcode) {
 
     char BRString[40];
     BRString[0] = '\0';
-    BRString[0] = 'X';
     sprintf(buffer, "%d", BRAdd);
     strcat(BRString, buffer);
 
-    printf("%s\n L", BRString);
+    printf("L%s\n", BRString);
 }
 
 void cb_type(int instruction, int opcode) {
@@ -190,7 +197,7 @@ void cb_type(int instruction, int opcode) {
 	}
 		
     COND_BR_ADD += global_i;
-
+    if (opcode != 0b10110100 && opcode != 0b10110101) {
     if (Rt == 0) {
         ext[0] = 'E';
         ext[1] = 'Q';
@@ -234,6 +241,7 @@ void cb_type(int instruction, int opcode) {
         ext[0] = 'L';
         ext[1] = 'E';
     }
+    }
 
 
     char RtString[40];
@@ -250,7 +258,7 @@ void cb_type(int instruction, int opcode) {
     sprintf(buffer, "%d", COND_BR_ADD);
     strcat(CONDString, buffer);
 
-    strcat(RtString, ", ");
+    strcat(RtString, ", l");
     strcat(RtString, CONDString);
 
     printf("%s\n", RtString);
@@ -289,9 +297,21 @@ void iw_type(int instruction, int opcode) {
 }
 
 
-int main() {
-	
-	FILE* fptr = fopen("test.legv8asm", "rb");
+int main(int argc, char *argv[]) {
+
+    if(argc < 2)
+    {
+        printf("Please provide a file name:\n");
+        return 1;
+    }
+
+    char *filename = argv[1];
+
+    	FILE* fptr = fopen(filename, "rb");
+
+    //printf("File Name:", filename);
+
+	//FILE* fptr = fopen("test.legv8asm", "rb");
 
     if (fptr == NULL)
     {
@@ -323,8 +343,8 @@ int main() {
 	int opcode = (instruction >> 21) & 0x7ff;
 	
 	//print binary representation for fun
-	printf("Binary representation of %d: \n", opcode);
-    print_binary(opcode);
+	// printf("Binary representation of %d: \n", opcode);
+    // print_binary(opcode);
 	
 	//B
 	if(((opcode >> 5) & 0x05) == (opcode >> 5)){
@@ -491,6 +511,10 @@ int main() {
 	}
 	
 	
+
+
+
 	global_i++;
 	}
+
 }
