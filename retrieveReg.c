@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 
 
@@ -8,13 +9,16 @@ void main(){
 
 bool rType = false;
 bool iType = false;
-bool dType = false;
+bool dType = true;
 bool bType = false;
 bool cbType = false;
 bool iwType = false;
 
-int instruction = 0x0;
+int instruction = 0b11111000000001000000001000100001;
 char buffer[40];
+
+
+
 
 
 if (rType) {
@@ -123,7 +127,7 @@ else if (bType) {
 else if (cbType) {
     int Rt = instruction & 0x1F;
     instruction = instruction >> 5;
-    int COND_BR_Add = instruction & 0x8FFFF;
+    int COND_BR_ADD = instruction & 0x8FFFF;
 
 
     char RtString[40] = "X";
